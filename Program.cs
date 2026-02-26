@@ -1,0 +1,418 @@
+using System;
+using System.Collections.Generic;
+
+namespace SistemaBancario
+{
+    class Program
+    {
+        // Lista para armazenar as contas (estrutura de dados)
+        private static List<ContaBancaria> contas = new List<ContaBancaria>();
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("╔════════════════════════════════════════════╗");
+            Console.WriteLine("║   SISTEMA DE GERENCIAMENTO BANCÁRIO        ║");
+            Console.WriteLine("╚════════════════════════════════════════════╝\n");
+
+            // Estrutura de repetição principal do sistema
+            bool continuar = true;
+            while (continuar)
+            {
+                try
+                {
+                    continuar = ExibirMenuPrincipal();
+                }
+                catch (Exception ex)
+                {
+                    // Tratamento de exceções genéricas
+                    Console.WriteLine($"\n❌ Erro inesperado: {ex.Message}");
+                    Console.WriteLine("Pressione qualquer tecla para continuar...");
+                    Console.ReadKey();
+                }
+            }
+
+            Console.WriteLine("\n👋 Obrigado por usar o Sistema Bancário!");
+        }
+
+        // Menu principal com estrutura condicional
+        static bool ExibirMenuPrincipal()
+        {
+            Console.Clear();
+            Console.WriteLine("========== MENU PRINCIPAL ==========");
+            Console.WriteLine("1 - Criar Nova Conta");
+            Console.WriteLine("2 - Listar Todas as Contas");
+            Console.WriteLine("3 - Acessar Conta");
+            Console.WriteLine("4 - Sair");
+            Console.WriteLine("====================================");
+            Console.Write("Escolha uma opção: ");
+
+            try
+            {
+                int opcao = int.Parse(Console.ReadLine());
+
+                // Estrutura condicional switch
+                switch (opcao)
+                {
+                    case 1:
+                        CriarNovaConta();
+                        break;
+                    case 2:
+                        ListarContas();
+                        break;
+                    case 3:
+                        AcessarConta();
+                        break;
+                    case 4:
+                        return false; // Sair do sistema
+                    default:
+                        Console.WriteLine("\n⚠️ Opção inválida! Escolha entre 1 e 4.");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+            catch (FormatException)
+            {
+                // Tratamento de exceção para entrada inválida
+                Console.WriteLine("\n❌ Erro: Digite apenas números!");
+                Console.ReadKey();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n❌ Erro: {ex.Message}");
+                Console.ReadKey();
+            }
+
+            return true;
+        }
+
+        // Método para criar nova conta com estrutura condicional
+        static void CriarNovaConta()
+        {
+            Console.Clear();
+            Console.WriteLine("========== CRIAR NOVA CONTA ==========");
+            Console.WriteLine("Tipos de Conta:");
+            Console.WriteLine("1 - Conta Corrente");
+            Console.WriteLine("2 - Conta Poupança");
+            Console.WriteLine("3 - Conta Empresarial");
+            Console.WriteLine("======================================");
+            Console.Write("Escolha o tipo de conta: ");
+
+            try
+            {
+                int tipo = int.Parse(Console.ReadLine());
+
+                Console.Write("Número da conta: ");
+                string numeroConta = Console.ReadLine();
+
+                Console.Write("Nome do titular: ");
+                string titular = Console.ReadLine();
+
+                Console.Write("Saldo inicial (opcional, Enter para R$ 0,00): ");
+                string saldoStr = Console.ReadLine();
+                decimal saldoInicial = string.IsNullOrWhiteSpace(saldoStr) ? 0 : decimal.Parse(saldoStr);
+
+                ContaBancaria novaConta = null;
+
+                // Estrutura condicional switch para criar o tipo correto de conta
+                switch (tipo)
+                {
+                    case 1:
+                        Console.Write("Taxa de saque (opcional, Enter para R$ 5,00): ");
+                        string taxaStr = Console.ReadLine();
+                        decimal taxaSaque = string.IsNullOrWhiteSpace(taxaStr) ? 5.00m : decimal.Parse(taxaStr);
+                        novaConta = new ContaCorrente(numeroConta, titular, saldoInicial, taxaSaque);
+                        break;
+
+                    case 2:
+                        Console.Write("Taxa de rendimento % (opcional, Enter para 0,5%): ");
+                        string rendStr = Console.ReadLine();
+                        decimal taxaRendimento = string.IsNullOrWhiteSpace(rendStr) ? 0.5m : decimal.Parse(rendStr);
+                        novaConta = new ContaPoupanca(numeroConta, titular, saldoInicial, taxaRendimento);
+                        break;
+
+                    case 3:
+                        Console.Write("Limite de empréstimo (opcional, Enter para R$ 10.000,00): ");
+                        string limiteStr = Console.ReadLine();
+                        decimal limiteEmprestimo = string.IsNullOrWhiteSpace(limiteStr) ? 10000m : decimal.Parse(limiteStr);
+                        novaConta = new ContaEmpresarial(numeroConta, titular, saldoInicial, limiteEmprestimo);
+                        break;
+
+                    default:
+                        Console.WriteLine("\n⚠️ Tipo de conta inválido!");
+                        Console.ReadKey();
+                        return;
+                }
+
+                contas.Add(novaConta);
+                Console.WriteLine("\n✅ Conta criada com sucesso!");
+                novaConta.ExibirDados();
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\n❌ Erro: Formato de número inválido!");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"\n❌ Erro de validação: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n❌ Erro ao criar conta: {ex.Message}");
+            }
+
+            Console.WriteLine("\nPressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
+
+        // Método para listar contas com estrutura de repetição
+        static void ListarContas()
+        {
+            Console.Clear();
+            Console.WriteLine("========== LISTA DE CONTAS ==========\n");
+
+            // Estrutura condicional para verificar se há contas
+            if (contas.Count == 0)
+            {
+                Console.WriteLine("Nenhuma conta cadastrada.");
+            }
+            else
+            {
+                // Estrutura de repetição foreach
+                foreach (var conta in contas)
+                {
+                    conta.ExibirDados();
+                }
+            }
+
+            Console.WriteLine("Pressione qualquer tecla para continuar...");
+            Console.ReadKey();
+        }
+
+        // Método para acessar conta específica
+        static void AcessarConta()
+        {
+            Console.Clear();
+            Console.WriteLine("========== ACESSAR CONTA ==========");
+            Console.Write("Digite o número da conta: ");
+            string numeroConta = Console.ReadLine();
+
+            // Estrutura de repetição para buscar conta
+            ContaBancaria contaEncontrada = null;
+            foreach (var conta in contas)
+            {
+                if (conta.NumeroConta == numeroConta)
+                {
+                    contaEncontrada = conta;
+                    break;
+                }
+            }
+
+            // Estrutura condicional para validar se conta foi encontrada
+            if (contaEncontrada == null)
+            {
+                Console.WriteLine("\n❌ Conta não encontrada!");
+                Console.ReadKey();
+                return;
+            }
+
+            // Menu da conta com estrutura de repetição
+            bool voltarMenu = false;
+            while (!voltarMenu)
+            {
+                try
+                {
+                    voltarMenu = ExibirMenuConta(contaEncontrada);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"\n❌ Erro: {ex.Message}");
+                    Console.ReadKey();
+                }
+            }
+        }
+
+        // Menu de operações da conta
+        static bool ExibirMenuConta(ContaBancaria conta)
+        {
+            Console.Clear();
+            conta.ExibirDados();
+
+            Console.WriteLine("========== OPERAÇÕES ==========");
+            Console.WriteLine("1 - Depositar");
+            Console.WriteLine("2 - Sacar");
+            Console.WriteLine("3 - Exibir Dados");
+
+            // Opções específicas por tipo de conta (estrutura condicional)
+            if (conta is ContaPoupanca)
+            {
+                Console.WriteLine("4 - Aplicar Rendimento");
+            }
+            else if (conta is ContaEmpresarial)
+            {
+                Console.WriteLine("4 - Solicitar Empréstimo");
+                Console.WriteLine("5 - Pagar Empréstimo");
+            }
+
+            Console.WriteLine("0 - Voltar ao Menu Principal");
+            Console.WriteLine("===============================");
+            Console.Write("Escolha uma opção: ");
+
+            try
+            {
+                int opcao = int.Parse(Console.ReadLine());
+
+                // Estrutura condicional switch
+                switch (opcao)
+                {
+                    case 1:
+                        RealizarDeposito(conta);
+                        break;
+                    case 2:
+                        RealizarSaque(conta);
+                        break;
+                    case 3:
+                        conta.ExibirDados();
+                        Console.ReadKey();
+                        break;
+                    case 4:
+                        // Polimorfismo: comportamento diferente por tipo
+                        if (conta is ContaPoupanca cp)
+                        {
+                            cp.AplicarRendimento();
+                            Console.ReadKey();
+                        }
+                        else if (conta is ContaEmpresarial ce)
+                        {
+                            SolicitarEmprestimo(ce);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n⚠️ Opção inválida para este tipo de conta!");
+                            Console.ReadKey();
+                        }
+                        break;
+                    case 5:
+                        if (conta is ContaEmpresarial ce2)
+                        {
+                            PagarEmprestimo(ce2);
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n⚠️ Opção inválida!");
+                            Console.ReadKey();
+                        }
+                        break;
+                    case 0:
+                        return true; // Voltar ao menu principal
+                    default:
+                        Console.WriteLine("\n⚠️ Opção inválida!");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\n❌ Erro: Digite apenas números!");
+                Console.ReadKey();
+            }
+
+            return false;
+        }
+
+        // Método para realizar depósito com tratamento de exceções
+        static void RealizarDeposito(ContaBancaria conta)
+        {
+            try
+            {
+                Console.Write("\nValor do depósito: R$ ");
+                decimal valor = decimal.Parse(Console.ReadLine());
+                conta.Depositar(valor);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\n❌ Erro: Formato de valor inválido!");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"\n❌ {ex.Message}");
+            }
+
+            Console.ReadKey();
+        }
+
+        // Método para realizar saque com tratamento de exceções
+        static void RealizarSaque(ContaBancaria conta)
+        {
+            try
+            {
+                Console.Write("\nValor do saque: R$ ");
+                decimal valor = decimal.Parse(Console.ReadLine());
+                conta.Sacar(valor);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\n❌ Erro: Formato de valor inválido!");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"\n❌ {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"\n❌ {ex.Message}");
+            }
+
+            Console.ReadKey();
+        }
+
+        // Método para solicitar empréstimo
+        static void SolicitarEmprestimo(ContaEmpresarial conta)
+        {
+            try
+            {
+                Console.Write("\nValor do empréstimo: R$ ");
+                decimal valor = decimal.Parse(Console.ReadLine());
+                conta.SolicitarEmprestimo(valor);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\n❌ Erro: Formato de valor inválido!");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"\n❌ {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"\n❌ {ex.Message}");
+            }
+
+            Console.ReadKey();
+        }
+
+        // Método para pagar empréstimo
+        static void PagarEmprestimo(ContaEmpresarial conta)
+        {
+            try
+            {
+                Console.Write("\nValor do pagamento: R$ ");
+                decimal valor = decimal.Parse(Console.ReadLine());
+                conta.PagarEmprestimo(valor);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\n❌ Erro: Formato de valor inválido!");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"\n❌ {ex.Message}");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"\n❌ {ex.Message}");
+            }
+
+            Console.ReadKey();
+        }
+    }
+}

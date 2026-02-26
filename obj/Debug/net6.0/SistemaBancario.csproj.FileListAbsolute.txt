@@ -1,0 +1,14 @@
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\bin\Debug\net6.0\SistemaBancario.exe
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\bin\Debug\net6.0\SistemaBancario.deps.json
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\bin\Debug\net6.0\SistemaBancario.runtimeconfig.json
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\bin\Debug\net6.0\SistemaBancario.dll
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\bin\Debug\net6.0\SistemaBancario.pdb
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\obj\Debug\net6.0\SistemaBancario.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\obj\Debug\net6.0\SistemaBancario.AssemblyInfoInputs.cache
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\obj\Debug\net6.0\SistemaBancario.AssemblyInfo.cs
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\obj\Debug\net6.0\SistemaBancario.csproj.CoreCompileInputs.cache
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\obj\Debug\net6.0\SistemaBancario.dll
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\obj\Debug\net6.0\refint\SistemaBancario.dll
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\obj\Debug\net6.0\SistemaBancario.pdb
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\obj\Debug\net6.0\SistemaBancario.genruntimeconfig.cache
+C:\Users\162.597813\Desktop\blackenter\projeto ford\sprint 1\SistemaBancario_Entrega_Final\SistemaBancario\obj\Debug\net6.0\ref\SistemaBancario.dll
