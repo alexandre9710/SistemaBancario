@@ -1,6 +1,6 @@
 using System;
 
-namespace SistemaBancario
+namespace BancoX
 {
     /// <summary>
     /// Classe que representa uma Conta Poupança sem taxa e com rendimento
@@ -55,10 +55,8 @@ namespace SistemaBancario
                 Console.WriteLine("Não há saldo para aplicar rendimento.");
                 return;
             }
-
             decimal rendimento = _saldo * (TaxaRendimento / 100);
             _saldo += rendimento;
-            
             Console.WriteLine($"Rendimento de {TaxaRendimento}% aplicado!");
             Console.WriteLine($"Valor do rendimento: R$ {rendimento:F2}");
             Console.WriteLine($"Novo saldo: R$ {_saldo:F2}");
