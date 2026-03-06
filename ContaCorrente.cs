@@ -19,8 +19,8 @@ namespace BancoX
             }
         }
         // Construtor
-        public ContaCorrente(string numeroConta, string titular, decimal saldoInicial = 0, decimal taxaSaque = 5.00m)
-            : base(numeroConta, titular, saldoInicial)
+        public ContaCorrente(string numeroConta, string titular, string cpf, string senha, decimal saldoInicial = 0, decimal taxaSaque = 5.00m)
+            : base(numeroConta, titular, cpf, senha, saldoInicial)
         {
             TaxaSaque = taxaSaque;
         }
@@ -53,3 +53,4 @@ namespace BancoX
         }
     }
 }
+
