@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
-namespace SistemaBancario
+namespace BancoX
 {
     class Program
     {
@@ -10,9 +11,7 @@ namespace SistemaBancario
 
         static void Main(string[] args)
         {
-            Console.WriteLine("╔════════════════════════════════════════════╗");
-            Console.WriteLine("║   SISTEMA DE GERENCIAMENTO BANCÁRIO        ║");
-            Console.WriteLine("╚════════════════════════════════════════════╝\n");
+            
 
             // Estrutura de repetição principal do sistema
             bool continuar = true;
@@ -31,13 +30,16 @@ namespace SistemaBancario
                 }
             }
 
-            Console.WriteLine("\n👋 Obrigado por usar o Sistema Bancário!");
+            Console.WriteLine("\n👋 Obrigado por usar o BancoX!");
         }
 
         // Menu principal com estrutura condicional
         static bool ExibirMenuPrincipal()
         {
             Console.Clear();
+            Console.WriteLine("╔════════════════════════════════════════════╗");
+            Console.WriteLine("║   Banco X                                  ║");
+            Console.WriteLine("╚════════════════════════════════════════════╝\n");
             Console.WriteLine("========== MENU PRINCIPAL ==========");
             Console.WriteLine("1 - Criar Nova Conta");
             Console.WriteLine("2 - Listar Todas as Contas");
@@ -101,8 +103,17 @@ namespace SistemaBancario
             {
                 int tipo = int.Parse(Console.ReadLine());
 
-                Console.Write("Número da conta: ");
-                string numeroConta = Console.ReadLine();
+                string numeroConta;
+                while (true)
+                {
+                    Console.Write("Número da conta (XXXXX-X): ");
+                    numeroConta = Console.ReadLine();
+                    if (Regex.IsMatch(numeroConta, @"^\d{5}-\d{1}$"))
+                    {
+                        break;
+                    }
+                    Console.WriteLine("\n❌ Formato de número de conta inválido. Deve seguir o padrão XXXXX-X (5 dígitos, hífen, 1 dígito).");
+                }
 
                 Console.Write("Nome do titular: ");
                 string titular = Console.ReadLine();
@@ -193,8 +204,17 @@ namespace SistemaBancario
         {
             Console.Clear();
             Console.WriteLine("========== ACESSAR CONTA ==========");
-            Console.Write("Digite o número da conta: ");
-            string numeroConta = Console.ReadLine();
+            string numeroConta;
+            while (true)
+            {
+                Console.Write("Digite o número da conta (XXXXX-X): ");
+                numeroConta = Console.ReadLine();
+                if (Regex.IsMatch(numeroConta, @"^\d{5}-\d{1}$"))
+                {
+                    break;
+                }
+                Console.WriteLine("\n❌ Formato de número de conta inválido. Deve seguir o padrão XXXXX-X (5 dígitos, hífen, 1 dígito).");
+            }
 
             // Estrutura de repetição para buscar conta
             ContaBancaria contaEncontrada = null;
@@ -291,6 +311,7 @@ namespace SistemaBancario
                             Console.ReadKey();
                         }
                         break;
+
                     case 5:
                         if (conta is ContaEmpresarial ce2)
                         {
@@ -298,12 +319,14 @@ namespace SistemaBancario
                         }
                         else
                         {
-                            Console.WriteLine("\n⚠️ Opção inválida!");
+                            Console.WriteLine("\n⚠️ Opção inválida para este tipo de conta!");
                             Console.ReadKey();
                         }
                         break;
+
                     case 0:
                         return true; // Voltar ao menu principal
+
                     default:
                         Console.WriteLine("\n⚠️ Opção inválida!");
                         Console.ReadKey();
@@ -315,103 +338,110 @@ namespace SistemaBancario
                 Console.WriteLine("\n❌ Erro: Digite apenas números!");
                 Console.ReadKey();
             }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"\n❌ Erro de validação: {ex.Message}");
+                Console.ReadKey();
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"\n❌ Operação inválida: {ex.Message}");
+                Console.ReadKey();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n❌ Erro: {ex.Message}");
+                Console.ReadKey();
+            }
 
             return false;
         }
 
-        // Método para realizar depósito com tratamento de exceções
         static void RealizarDeposito(ContaBancaria conta)
         {
+            Console.Write("\nDigite o valor para depósito: ");
             try
             {
-                Console.Write("\nValor do depósito: R$ ");
                 decimal valor = decimal.Parse(Console.ReadLine());
                 conta.Depositar(valor);
             }
             catch (FormatException)
             {
-                Console.WriteLine("\n❌ Erro: Formato de valor inválido!");
+                Console.WriteLine("\n❌ Erro: Valor inválido. Digite um número.");
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine($"\n❌ {ex.Message}");
+                Console.WriteLine($"\n❌ Erro: {ex.Message}");
             }
-
             Console.ReadKey();
         }
 
-        // Método para realizar saque com tratamento de exceções
         static void RealizarSaque(ContaBancaria conta)
         {
+            Console.Write("\nDigite o valor para saque: ");
             try
             {
-                Console.Write("\nValor do saque: R$ ");
                 decimal valor = decimal.Parse(Console.ReadLine());
                 conta.Sacar(valor);
             }
             catch (FormatException)
             {
-                Console.WriteLine("\n❌ Erro: Formato de valor inválido!");
+                Console.WriteLine("\n❌ Erro: Valor inválido. Digite um número.");
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine($"\n❌ {ex.Message}");
+                Console.WriteLine($"\n❌ Erro: {ex.Message}");
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine($"\n❌ {ex.Message}");
+                Console.WriteLine($"\n❌ Erro: {ex.Message}");
             }
-
             Console.ReadKey();
         }
 
-        // Método para solicitar empréstimo
         static void SolicitarEmprestimo(ContaEmpresarial conta)
         {
+            Console.Write("\nDigite o valor do empréstimo: ");
             try
             {
-                Console.Write("\nValor do empréstimo: R$ ");
                 decimal valor = decimal.Parse(Console.ReadLine());
                 conta.SolicitarEmprestimo(valor);
             }
             catch (FormatException)
             {
-                Console.WriteLine("\n❌ Erro: Formato de valor inválido!");
+                Console.WriteLine("\n❌ Erro: Valor inválido. Digite um número.");
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine($"\n❌ {ex.Message}");
+                Console.WriteLine($"\n❌ Erro: {ex.Message}");
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine($"\n❌ {ex.Message}");
+                Console.WriteLine($"\n❌ Erro: {ex.Message}");
             }
-
             Console.ReadKey();
         }
 
-        // Método para pagar empréstimo
         static void PagarEmprestimo(ContaEmpresarial conta)
         {
+            Console.Write("\nDigite o valor para pagar o empréstimo: ");
             try
             {
-                Console.Write("\nValor do pagamento: R$ ");
                 decimal valor = decimal.Parse(Console.ReadLine());
                 conta.PagarEmprestimo(valor);
             }
             catch (FormatException)
             {
-                Console.WriteLine("\n❌ Erro: Formato de valor inválido!");
+                Console.WriteLine("\n❌ Erro: Valor inválido. Digite um número.");
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine($"\n❌ {ex.Message}");
+                Console.WriteLine($"\n❌ Erro: {ex.Message}");
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine($"\n❌ {ex.Message}");
+                Console.WriteLine($"\n❌ Erro: {ex.Message}");
             }
-
             Console.ReadKey();
         }
     }
