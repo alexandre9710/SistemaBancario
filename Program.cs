@@ -1,13 +1,15 @@
+using BancoX;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace BancoX
+namespace SistemaBancario
 {
     class Program
     {
         // Lista para armazenar as contas (estrutura de dados)
         private static List<ContaBancaria> contas = new List<ContaBancaria>();
+        private static Random random = new Random();
 
         static void Main(string[] args)
         {
@@ -30,7 +32,7 @@ namespace BancoX
                 }
             }
 
-            Console.WriteLine("\n👋 Obrigado por usar o BancoX!");
+            Console.WriteLine("\n👋 Obrigado por usar o Sistema Bancário!");
         }
 
         // Menu principal com estrutura condicional
@@ -103,20 +105,35 @@ namespace BancoX
             {
                 int tipo = int.Parse(Console.ReadLine());
 
-                string numeroConta;
+                Console.Write("Nome do titular: ");
+                string titular = Console.ReadLine();
+
+                string cpf;
                 while (true)
                 {
-                    Console.Write("Número da conta (XXXXX-X): ");
-                    numeroConta = Console.ReadLine();
-                    if (Regex.IsMatch(numeroConta, @"^\d{5}-\d{1}$"))
+                    Console.Write("CPF (apenas 11 dígitos numéricos): ");
+                    cpf = Console.ReadLine();
+                    if (Regex.IsMatch(cpf, @"^\d{11}$"))
                     {
                         break;
                     }
-                    Console.WriteLine("\n❌ Formato de número de conta inválido. Deve seguir o padrão XXXXX-X (5 dígitos, hífen, 1 dígito).");
+                    Console.WriteLine("\n❌ CPF inválido. Deve conter 11 dígitos numéricos.");
                 }
 
-                Console.Write("Nome do titular: ");
-                string titular = Console.ReadLine();
+                string senha;
+                while (true)
+                {
+                    Console.Write("Crie uma senha (mínimo 4 caracteres): ");
+                    senha = Console.ReadLine();
+                    if (senha.Length >= 4)
+                    {
+                        break;
+                    }
+                    Console.WriteLine("\n❌ A senha deve ter no mínimo 4 caracteres.");
+                }
+
+                string numeroConta = GerarNumeroContaUnico();
+                Console.WriteLine($"Número da conta gerado: {numeroConta}");
 
                 Console.Write("Saldo inicial (opcional, Enter para R$ 0,00): ");
                 string saldoStr = Console.ReadLine();
@@ -131,21 +148,21 @@ namespace BancoX
                         Console.Write("Taxa de saque (opcional, Enter para R$ 5,00): ");
                         string taxaStr = Console.ReadLine();
                         decimal taxaSaque = string.IsNullOrWhiteSpace(taxaStr) ? 5.00m : decimal.Parse(taxaStr);
-                        novaConta = new ContaCorrente(numeroConta, titular, saldoInicial, taxaSaque);
+                        novaConta = new ContaCorrente(numeroConta, titular, cpf, senha, saldoInicial, taxaSaque);
                         break;
 
                     case 2:
                         Console.Write("Taxa de rendimento % (opcional, Enter para 0,5%): ");
                         string rendStr = Console.ReadLine();
                         decimal taxaRendimento = string.IsNullOrWhiteSpace(rendStr) ? 0.5m : decimal.Parse(rendStr);
-                        novaConta = new ContaPoupanca(numeroConta, titular, saldoInicial, taxaRendimento);
+                        novaConta = new ContaPoupanca(numeroConta, titular, cpf, senha, saldoInicial, taxaRendimento);
                         break;
 
                     case 3:
                         Console.Write("Limite de empréstimo (opcional, Enter para R$ 10.000,00): ");
                         string limiteStr = Console.ReadLine();
                         decimal limiteEmprestimo = string.IsNullOrWhiteSpace(limiteStr) ? 10000m : decimal.Parse(limiteStr);
-                        novaConta = new ContaEmpresarial(numeroConta, titular, saldoInicial, limiteEmprestimo);
+                        novaConta = new ContaEmpresarial(numeroConta, titular, cpf, senha, saldoInicial, limiteEmprestimo);
                         break;
 
                     default:
@@ -173,6 +190,18 @@ namespace BancoX
 
             Console.WriteLine("\nPressione qualquer tecla para continuar...");
             Console.ReadKey();
+        }
+
+        private static string GerarNumeroContaUnico()
+        {
+            string novoNumero;
+            do
+            {
+                string parteNumerica = random.Next(10000, 99999).ToString(); // 5 dígitos
+                string digitoVerificador = random.Next(0, 9).ToString(); // 1 dígito
+                novoNumero = $"{parteNumerica}-{digitoVerificador}";
+            } while (contas.Exists(c => c.NumeroConta == novoNumero)); // Garante unicidade
+            return novoNumero;
         }
 
         // Método para listar contas com estrutura de repetição
@@ -231,6 +260,16 @@ namespace BancoX
             if (contaEncontrada == null)
             {
                 Console.WriteLine("\n❌ Conta não encontrada!");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.Write("Digite a senha: ");
+            string senhaDigitada = Console.ReadLine();
+
+            if (contaEncontrada.Senha != senhaDigitada)
+            {
+                Console.WriteLine("\n❌ Senha incorreta!");
                 Console.ReadKey();
                 return;
             }
@@ -446,3 +485,4 @@ namespace BancoX
         }
     }
 }
+
