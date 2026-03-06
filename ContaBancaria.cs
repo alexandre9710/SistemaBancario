@@ -10,6 +10,8 @@ namespace BancoX
         // Atributos privados com encapsulamento
         private string _numeroConta;
         private string _titular;
+        private string _cpf;
+        private string _senha;
         protected decimal _saldo; // Protected para permitir acesso nas classes filhas
         // Propriedades com encapsulamento
         public string NumeroConta
@@ -37,16 +39,45 @@ namespace BancoX
                 _titular = value;
             }
         }
+
+        public string Cpf
+        {
+            get { return _cpf; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("CPF não pode ser vazio.");
+                // Validação básica de CPF (apenas números e 11 dígitos)
+                if (!Regex.IsMatch(value, @"^\d{11}$"))
+                    throw new ArgumentException("CPF inválido. Deve conter 11 dígitos numéricos.");
+                _cpf = value;
+            }
+        }
+
+        public string Senha
+        {
+            get { return _senha; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Senha não pode ser vazia.");
+                if (value.Length < 4)
+                    throw new ArgumentException("A senha deve ter no mínimo 4 caracteres.");
+                _senha = value;
+            }
+        }
         public decimal Saldo
         {
             get { return _saldo; }
             protected set { _saldo = value; } // Set protegido
         }
         // Construtor
-        public ContaBancaria(string numeroConta, string titular, decimal saldoInicial = 0)
+        public ContaBancaria(string numeroConta, string titular, string cpf, string senha, decimal saldoInicial = 0)
         {
             NumeroConta = numeroConta;
             Titular = titular;
+            Cpf = cpf;
+            Senha = senha;
             if (saldoInicial < 0)
                 throw new ArgumentException("Saldo inicial não pode ser negativo.");
             _saldo = saldoInicial;
@@ -67,6 +98,9 @@ namespace BancoX
             Console.WriteLine("\n========== DADOS DA CONTA ==========");
             Console.WriteLine($"Número da Conta: {NumeroConta}");
             Console.WriteLine($"Titular: {Titular}");
+            Console.WriteLine($"CPF: {Cpf}");
+            // Não exibir a senha por segurança
+            // Console.WriteLine($"Senha: {Senha}");
             Console.WriteLine($"Saldo Atual: R$ {Saldo:F2}");
         }
     }
