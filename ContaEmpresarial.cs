@@ -39,8 +39,8 @@ namespace BancoX
         }
 
         // Construtor
-        public ContaEmpresarial(string numeroConta, string titular, decimal saldoInicial = 0, decimal limiteEmprestimo = 10000m)
-            : base(numeroConta, titular, saldoInicial)
+        public ContaEmpresarial(string numeroConta, string titular, string cpf, string senha, decimal saldoInicial = 0, decimal limiteEmprestimo = 10000m)
+            : base(numeroConta, titular, cpf, senha, saldoInicial)
         {
             LimiteEmprestimo = limiteEmprestimo;
             EmprestimoUtilizado = 0;
@@ -145,3 +145,4 @@ namespace BancoX
         }
     }
 }
+
