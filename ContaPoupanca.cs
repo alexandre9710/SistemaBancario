@@ -22,8 +22,8 @@ namespace BancoX
         }
 
         // Construtor
-        public ContaPoupanca(string numeroConta, string titular, decimal saldoInicial = 0, decimal taxaRendimento = 0.5m)
-            : base(numeroConta, titular, saldoInicial)
+        public ContaPoupanca(string numeroConta, string titular, string cpf, string senha, decimal saldoInicial = 0, decimal taxaRendimento = 0.5m)
+            : base(numeroConta, titular, cpf, senha, saldoInicial)
         {
             TaxaRendimento = taxaRendimento;
         }
@@ -72,3 +72,4 @@ namespace BancoX
         }
     }
 }
+
