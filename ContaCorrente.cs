@@ -1,6 +1,5 @@
 using System;
-
-namespace SistemaBancario
+namespace BancoX
 {
     /// <summary>
     /// Classe que representa uma Conta Corrente com taxa de saque
@@ -8,7 +7,6 @@ namespace SistemaBancario
     public class ContaCorrente : ContaBancaria
     {
         private decimal _taxaSaque;
-
         // Propriedade com encapsulamento
         public decimal TaxaSaque
         {
@@ -20,22 +18,18 @@ namespace SistemaBancario
                 _taxaSaque = value;
             }
         }
-
         // Construtor
         public ContaCorrente(string numeroConta, string titular, decimal saldoInicial = 0, decimal taxaSaque = 5.00m)
             : base(numeroConta, titular, saldoInicial)
         {
             TaxaSaque = taxaSaque;
         }
-
         // Implementação do método abstrato Sacar
         public override void Sacar(decimal valor)
         {
             if (valor <= 0)
                 throw new ArgumentException("Valor do saque deve ser positivo.");
-
             decimal valorTotal = valor + TaxaSaque;
-
             // Estrutura condicional para validar saldo
             if (valorTotal > _saldo)
             {
@@ -44,13 +38,11 @@ namespace SistemaBancario
                     $"Necessário: R$ {valorTotal:F2} (R$ {valor:F2} + taxa R$ {TaxaSaque:F2})"
                 );
             }
-
             _saldo -= valorTotal;
             Console.WriteLine($"Saque de R$ {valor:F2} realizado com sucesso!");
             Console.WriteLine($"Taxa de saque: R$ {TaxaSaque:F2}");
             Console.WriteLine($"Total debitado: R$ {valorTotal:F2}");
         }
-
         // Sobrescrita do método ExibirDados
         public override void ExibirDados()
         {
