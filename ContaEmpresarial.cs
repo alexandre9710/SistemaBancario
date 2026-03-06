@@ -1,6 +1,6 @@
 using System;
 
-namespace SistemaBancario
+namespace BancoX
 {
     /// <summary>
     /// Classe que representa uma Conta Empresarial com limite de empréstimo
@@ -76,7 +76,7 @@ namespace SistemaBancario
                 decimal valorDoLimite = valor - _saldo;
                 _saldo = 0;
                 _emprestimoUtilizado += valorDoLimite;
-                
+
                 Console.WriteLine($"Saque de R$ {valor:F2} realizado com sucesso!");
                 Console.WriteLine($"Utilizado R$ {valorDoLimite:F2} do limite de empréstimo.");
             }
@@ -98,7 +98,7 @@ namespace SistemaBancario
 
             _emprestimoUtilizado += valor;
             _saldo += valor;
-            
+
             Console.WriteLine($"Empréstimo de R$ {valor:F2} aprovado e creditado!");
             Console.WriteLine($"Limite restante: R$ {LimiteDisponivel:F2}");
         }
@@ -127,7 +127,7 @@ namespace SistemaBancario
 
             _saldo -= valor;
             _emprestimoUtilizado -= valor;
-            
+
             Console.WriteLine($"Pagamento de R$ {valor:F2} realizado!");
             Console.WriteLine($"Empréstimo restante: R$ {_emprestimoUtilizado:F2}");
             Console.WriteLine($"Limite disponível: R$ {LimiteDisponivel:F2}");
